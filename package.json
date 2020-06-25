@@ -2,9 +2,9 @@
   "name": "mrbeamapi",
   "version": "1.0.0",
   "description": "rest api",
-  "main": "index.ts",
+  "main": "server.ts",
   "scripts": {
-    "tsc": "tsc"
+    "start": "tsc & node server/server.js"
   },
   "repository": {
     "type": "git",
