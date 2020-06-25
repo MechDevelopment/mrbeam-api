@@ -26,6 +26,8 @@
   },
   "homepage": "https://github.com/MechDevelopment/MrBeamAPI#readme",
   "dependencies": {
+    "@types/express": "^4.17.6",
+    "express": "^4.17.1",
     "typescript": "^3.9.5"
   }
 }
