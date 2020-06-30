@@ -1,3 +1,5 @@
+import { nanoid } from 'nanoid';
+
 // CONSTANS
 const MIN_LENGTH = 0.01;
 const MIN_COUNT = 2;
@@ -74,7 +76,7 @@ function createUnits(count: number, length: number): Unit[] {
 
   for (let i = 0; i < count; i++) {
     units.push({
-      id: "gl43l543l5l5",
+      id: nanoid(10),
       type: Types.Empty,
       x: length / (count - 1) * i
     })
