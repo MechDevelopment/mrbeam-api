@@ -6,7 +6,8 @@ const MIN_COUNT = 2;
 enum Level { Elementary, Intermediate, Advanced }
 
 enum Types {
-  Empty, Force, Moment, Distload, Fixed, Simple, Hinge, Material
+  Empty = 'point', Force = 'force', Moment = 'moment', Distload = 'distload',
+  Fixed = 'fixed', Simple = 'simple', Hinge = 'hinge', Material = 'material'
 }
 
 // INTERFACE
@@ -14,6 +15,12 @@ interface GenParameters {
   level?: Level;
   count?: number;
   length?: number;
+}
+
+interface InitialSettings {
+  level: Level;
+  count: number;
+  length: number;
 }
 
 interface Unit {
@@ -46,41 +53,45 @@ function getLength(): number {
 }
 
 // MAIN FUNCTIONS
-function initialSettings(gp: GenParameters = {}): GenParameters {
-  if (!gp.level) gp.level = Level.Elementary;
+function initialSettings(gp: GenParameters = {}): InitialSettings {
+  const is = {} as InitialSettings;
+
+  is.level = (!gp.level) ? Level.Elementary : gp.level;
 
   if (!gp.count || gp.count < MIN_COUNT) {
-    gp.count = getCountByLevel(gp.level);
+    is.count = getCountByLevel(is.level);
   }
 
   if (!gp.length || gp.length < MIN_LENGTH) {
-    gp.length = getLength();
+    is.length = getLength();
   }
 
-  return gp;
+  return is;
 }
 
 function createUnits(count: number, length: number): Unit[] {
-  const units: Unit[] = [];
+  const units: Unit[] = []
+
+  for (let i = 0; i < count; i++) {
+    units.push({
+      id: "gl43l543l5l5",
+      type: Types.Empty,
+      x: length / (count - 1) * i
+    })
+  }
+
   return units;
 }
 
 // GENERATE
 function Generate(gp?: GenParameters) {
-  let { level, count, length } = initialSettings(gp);
+  let { level, count, length }: InitialSettings = initialSettings(gp);
 
-  console.log(level, count, length);
+  const units: Unit[] = createUnits(count, length);
+
+  console.log(units, level, count, length);
 }
 
-Generate()
-Generate({level: Level.Elementary})
-Generate({level: Level.Intermediate})
-Generate({level: Level.Advanced})
-
-Generate({count: 10})
-Generate({length: 5})
-Generate({count: 12, length: 321})
-
-Generate({count: 1})
-Generate({length: 0.001})
-Generate({count: 12, length: 321})
+Generate({ level: Level.Elementary })
+Generate({ level: Level.Intermediate })
+Generate({ level: Level.Advanced })
