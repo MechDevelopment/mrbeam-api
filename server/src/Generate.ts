@@ -6,6 +6,12 @@ enum Types {
 }
 
 // INTERFACE
+interface GenConstuctor {
+  readonly level: Level;
+  count: number;
+  length: number;
+}
+
 interface Unit {
   readonly id: string;
   type: Types;
@@ -32,14 +38,14 @@ function getCountByLevel(level: Level): number {
 }
 
 // MAIN FUNCTIONS
-function initialSettings(level: Level, count: number, length: number): [number, number] {
-  const init: [number, number] = [count, length];
+function initialSettings(gc: GenConstuctor): [number, number] {
+  const init: [number, number] = [gc.count, gc.length];
 
-  if (count < 2) {
-    init[0] = getCountByLevel(level);
+  if (gc.count < 2) {
+    init[0] = getCountByLevel(gc.level);
   }
 
-  if (length < 0.01) {
+  if (gc.length < 0.01) {
     init[1] = randomInteger(1, 5) * 10;
   }
 
@@ -52,13 +58,19 @@ function createUnits(count: number, length: number): Unit[] {
 }
 
 // GENERATE
-function Generate(level: Level = Level.Elementary, count: number = 0, length: number = 0) {
+function Generate(level?: Level, count?: number, lenght?: number) {
+  
+  const gc: GenConstuctor = { 
+    level: Level.Elementary, 
+    count: 0, 
+    length: 0 
+  };
 
-  [count, length] = initialSettings(level, count, length)
+  [count, length] = initialSettings(gc);
 
-  const units: Unit[] = createUnits(count, length);
+  const units: Unit[] = createUnits(gc.count, gc.length);
 
-  console.log(level, count, length)
+  console.log(level, count, length);
 }
 
 Generate()
