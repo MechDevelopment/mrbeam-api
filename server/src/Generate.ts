@@ -1,3 +1,7 @@
+// CONSTANS
+const MIN_LENGTH = 0.01;
+const MIN_COUNT = 2;
+
 // ENUM
 enum Level { Elementary, Intermediate, Advanced }
 
@@ -6,10 +10,10 @@ enum Types {
 }
 
 // INTERFACE
-interface GenConstuctor {
-  readonly level: Level;
-  count: number;
-  length: number;
+interface GenParameters {
+  level?: Level;
+  count?: number;
+  length?: number;
 }
 
 interface Unit {
@@ -37,19 +41,23 @@ function getCountByLevel(level: Level): number {
   }
 }
 
+function getLength(): number {
+  return randomInteger(1, 5) * 10;
+}
+
 // MAIN FUNCTIONS
-function initialSettings(gc: GenConstuctor): [number, number] {
-  const init: [number, number] = [gc.count, gc.length];
+function initialSettings(gp: GenParameters = {}): GenParameters {
+  if (!gp.level) gp.level = Level.Elementary;
 
-  if (gc.count < 2) {
-    init[0] = getCountByLevel(gc.level);
+  if (!gp.count || gp.count < MIN_COUNT) {
+    gp.count = getCountByLevel(gp.level);
   }
 
-  if (gc.length < 0.01) {
-    init[1] = randomInteger(1, 5) * 10;
+  if (!gp.length || gp.length < MIN_LENGTH) {
+    gp.length = getLength();
   }
 
-  return init;
+  return gp;
 }
 
 function createUnits(count: number, length: number): Unit[] {
@@ -58,26 +66,21 @@ function createUnits(count: number, length: number): Unit[] {
 }
 
 // GENERATE
-function Generate(level?: Level, count?: number, lenght?: number) {
-  
-  const gc: GenConstuctor = { 
-    level: Level.Elementary, 
-    count: 0, 
-    length: 0 
-  };
-
-  [count, length] = initialSettings(gc);
-
-  const units: Unit[] = createUnits(gc.count, gc.length);
+function Generate(gp?: GenParameters) {
+  let { level, count, length } = initialSettings(gp);
 
   console.log(level, count, length);
 }
 
 Generate()
-Generate(Level.Elementary)
-Generate(Level.Intermediate)
-Generate(Level.Advanced)
+Generate({level: Level.Elementary})
+Generate({level: Level.Intermediate})
+Generate({level: Level.Advanced})
 
-Generate(Level.Elementary, 5, 32)
-Generate(Level.Elementary, 5, 0)
-Generate(Level.Elementary, 0, 5)
+Generate({count: 10})
+Generate({length: 5})
+Generate({count: 12, length: 321})
+
+Generate({count: 1})
+Generate({length: 0.001})
+Generate({count: 12, length: 321})
