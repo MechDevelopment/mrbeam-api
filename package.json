@@ -4,7 +4,11 @@
   "description": "rest api",
   "main": "server.ts",
   "scripts": {
-    "start": "tsc & node server/server.js"
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "locBuild": "tsc -w",
+    "locStart": "nodemon dist/server.js"
+
   },
   "repository": {
     "type": "git",
