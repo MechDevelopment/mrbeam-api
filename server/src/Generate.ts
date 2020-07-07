@@ -5,7 +5,7 @@ const MIN_LENGTH = 0.01;
 const MIN_COUNT = 2;
 
 // ENUM
-enum Level { Elementary, Intermediate, Advanced }
+type Level = 'Elementary' | 'Intermediate' | 'Advanced'
 
 enum Types {
   Empty = 'point', Force = 'force', Moment = 'moment', Distload = 'distload',
@@ -41,11 +41,11 @@ function randomInteger(a: number, b: number): number {
 // CONSTANT FUNCTIONS
 function getCountByLevel(level: Level): number {
   switch (level) {
-    case Level.Elementary:
+    case 'Elementary':
       return randomInteger(2, 5);
-    case Level.Intermediate:
+    case 'Intermediate':
       return randomInteger(3, 8);
-    case Level.Advanced:
+    case 'Advanced':
       return randomInteger(5, 10);
   }
 }
@@ -58,7 +58,7 @@ function getLength(): number {
 function initialSettings(gp: GenParameters = {}): InitialSettings {
   const is = {} as InitialSettings;
 
-  is.level = (!gp.level) ? Level.Elementary : gp.level;
+  is.level = (!gp.level) ? 'Elementary' : gp.level;
 
   if (!gp.count || gp.count < MIN_COUNT) {
     is.count = getCountByLevel(is.level);
@@ -94,6 +94,6 @@ function Generate(gp?: GenParameters) {
   console.log(units, level, count, length);
 }
 
-Generate({ level: Level.Elementary })
-Generate({ level: Level.Intermediate })
-Generate({ level: Level.Advanced })
+Generate({ level: 'Elementary' })
+Generate({ level: 'Intermediate' })
+Generate({ level: 'Advanced' })
