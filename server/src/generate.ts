@@ -4,11 +4,9 @@ import { GenerateLevel, Unit, GenerateParameters } from './core/global.core';
 import { InitSettings } from './core/generate.core';
 import { randInt } from './services/algebra';
 
-const DEFAULT_LEVEL: GenerateLevel = 'elementary';
-
 
 function initSettings(gp: GenerateParameters): InitSettings {
-  if (!gp.level) gp.level = DEFAULT_LEVEL;
+  if (!gp.level) gp.level = 'elementary';
 
   if (gp.level === 'random') {
     const basicLevels: GenerateLevel[] = ['elementary', 'intermediate', 'advanced'];
@@ -22,7 +20,7 @@ function initSettings(gp: GenerateParameters): InitSettings {
   }
 
   if (!gp.beamLength || gp.beamLength == 0) {
-    gp.beamLength = randInt(1, 10) * 10
+    gp.beamLength = randInt(1, 10) * 10;
   }
 
   return gp as InitSettings;
@@ -61,7 +59,7 @@ function addSimple(units: Array<Unit>): void {
     // 50% left and right positions
     if (randInt(0, 1)) {
       // 25% points together
-      if (randInt(0, 1)){
+      if (randInt(0, 1)) {
         units[shift].type = 'simple';
         units[shift + 1].type = 'simple';
       } else {
@@ -70,7 +68,7 @@ function addSimple(units: Array<Unit>): void {
       }
     } else {
       // 25% one point on the edge 22
-      if (randInt(0, 1)){
+      if (randInt(0, 1)) {
         units[0].type = 'simple';
         units[units.length - shift - 1].type = 'simple';
       } else {
@@ -94,22 +92,39 @@ function addSupport(units: Array<Unit>): void {
 }
 
 
+function finish(units: Array<Unit>): void {
+  const type = (randInt(0, 2))
+    ? 'force'   // 66% add force
+    : 'moment'; // 33% add moment
+
+  for (let i = 0; i < units.length; i++) {
+    if (units[i].type === 'point') {
+      units[i].type = type;
+      units[i].value = (randInt(0, 5) * 10 + 50) * (randInt(0, 1) ? 1 : -1);
+    }
+  }
+}
+
+
 export default function generate(gp: GenerateParameters = {}) {
 
   const { level, unitsCount, beamLength }: InitSettings = initSettings(gp);
   const units: Array<Unit> = createUnits(unitsCount, beamLength);
 
+  // Добавление закреплений
   addSupport(units);
 
-
-
-  console.log(level, unitsCount, beamLength, units);
-
-  if (level === 'elementary') {
-
+  if (level !== 'elementary'){
+    
   }
 
 
+
+  // Добиваем оставшиеся точки моментами и силами
+  finish(units);
+
+  console.log(level, unitsCount, beamLength, units);
+  return units;
 }
 
 generate({ level: 'elementary' });
@@ -117,7 +132,3 @@ generate({ level: 'intermediate' });
 generate({ level: 'advanced' });
 generate({ level: 'random' });
 
-generate({ level: 'random', unitsCount: 4});
-generate({ level: 'random', unitsCount: 4});
-generate({ level: 'random', unitsCount: 4});
-generate({ level: 'random', unitsCount: 4});
