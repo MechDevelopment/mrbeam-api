@@ -106,6 +106,31 @@ function finish(units: Array<Unit>): void {
 }
 
 
+function addDistload(units: Array<Unit>): void {
+  
+}
+
+
+function addMaterial(units: Array<Unit>): void {
+  
+}
+
+
+function addHinge(units: Array<Unit>): void {
+  
+}
+
+
+function addAdvancedDistload(units: Array<Unit>): void {
+  
+}
+
+
+function addAdvancedMaterial(units: Array<Unit>): void {
+  
+}
+
+
 export default function generate(gp: GenerateParameters = {}) {
 
   const { level, unitsCount, beamLength }: InitSettings = initSettings(gp);
@@ -114,11 +139,24 @@ export default function generate(gp: GenerateParameters = {}) {
   // Добавление закреплений
   addSupport(units);
 
-  if (level !== 'elementary'){
-    
+  if (level === 'intermediate') {
+    // Добавление распределнной нагрузки на всей длине балки
+    addDistload(units);
+
+    // Добавление материала на всей длине балки
+    addMaterial(units);
   }
 
+  if (level === 'advanced') {
+    // Добавление шарнира
+    addHinge(units);
 
+    // Добавление распределнной нагрузки
+    addAdvancedDistload(units);
+
+    // Добавление нескольких материалов
+    addAdvancedMaterial(units);
+  }
 
   // Добиваем оставшиеся точки моментами и силами
   finish(units);
