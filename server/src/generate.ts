@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 import { GenerateLevel, UnitType, Unit, GenerateParameters } from './core/global.core';
 import { InitSettings } from './core/generate.core';
-import { randInt } from './services/lgebra';
+import { randInt } from './services/algebra';
 
 const DEFAULT_LEVEL: GenerateLevel = 'elementary';
 
