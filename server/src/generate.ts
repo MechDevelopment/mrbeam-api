@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid';
-import { GenerateLevel, UnitType, Unit, GenerateParameters } from './core/global.core';
+
+import { GenerateLevel, Unit, GenerateParameters } from './core/global.core';
 import { InitSettings } from './core/generate.core';
 import { randInt } from './services/algebra';
 
@@ -44,13 +45,40 @@ function createUnits(unitsCount: number, beamLength: number): Array<Unit> {
 
 
 function addFixed(units: Array<Unit>): void {
-  if (randInt(0, 1)) units[0].type = 'fixed';
-  else units[units.length - 1].type = 'fixed';
+  if (randInt(0, 1)) units[0].type = 'fixed'; // left position 50%
+  else units[units.length - 1].type = 'fixed'; // right posititon 50%
 }
 
 
 function addSimple(units: Array<Unit>): void {
-  
+  const shift: number = randInt(0, Math.floor(units.length / 2) - 1);
+
+  if (randInt(0, 1)) {
+    // 50% center position
+    units[shift].type = 'simple';
+    units[units.length - shift - 1].type = 'simple';
+  } else {
+    // 50% left and right positions
+    if (randInt(0, 1)) {
+      // 25% points together
+      if (randInt(0, 1)){
+        units[shift].type = 'simple';
+        units[shift + 1].type = 'simple';
+      } else {
+        units[units.length - shift - 1].type = 'simple';
+        units[units.length - shift - 2].type = 'simple';
+      }
+    } else {
+      // 25% one point on the edge 22
+      if (randInt(0, 1)){
+        units[0].type = 'simple';
+        units[units.length - shift - 1].type = 'simple';
+      } else {
+        units[shift].type = 'simple';
+        units[units.length - 1].type = 'simple';
+      }
+    }
+  }
 }
 
 
@@ -58,8 +86,8 @@ function addSupport(units: Array<Unit>): void {
   if (units.length < 3) addFixed(units);
 
   if (units.length > 2 && units.length < 6) {
-    if (randInt(0, 1)) addFixed(units);
-    else addSimple(units);
+    if (randInt(0, 2)) addSimple(units); // 66% simple
+    else addFixed(units); // 33% fixed
   }
 
   if (units.length > 5) addSimple(units);
@@ -88,3 +116,8 @@ generate({ level: 'elementary' });
 generate({ level: 'intermediate' });
 generate({ level: 'advanced' });
 generate({ level: 'random' });
+
+generate({ level: 'random', unitsCount: 4});
+generate({ level: 'random', unitsCount: 4});
+generate({ level: 'random', unitsCount: 4});
+generate({ level: 'random', unitsCount: 4});
