@@ -1,75 +1,31 @@
 import { nanoid } from 'nanoid';
+import { GenerateLevel, UnitType, Unit, GenerateParameters } from './core/global.core';
+import { InitSettings } from './core/generate.core';
+import { randInt } from './services/algebra';
 
-// CONSTANS
-const MIN_LENGTH = 0.01;
-const MIN_COUNT = 2;
+const DEFAULT_LEVEL: GenerateLevel = 'elementary';
 
-// ENUM
-type Level = 'Elementary' | 'Intermediate' | 'Advanced'
+function initSettings(gp: GenerateParameters): InitSettings {
+  if (!gp.level) gp.level = DEFAULT_LEVEL;
 
-enum Types {
-  Empty = 'point', Force = 'force', Moment = 'moment', Distload = 'distload',
-  Fixed = 'fixed', Simple = 'simple', Hinge = 'hinge', Material = 'material'
-}
-
-// INTERFACE
-interface GenParameters {
-  level?: Level;
-  count?: number;
-  length?: number;
-}
-
-interface InitialSettings {
-  level: Level;
-  count: number;
-  length: number;
-}
-
-interface Unit {
-  readonly id: string;
-  type: Types;
-  x: number | number[];
-  value?: number | number[];
-}
-
-// MATH FUNCTIONS
-function randomInteger(a: number, b: number): number {
-  let rand: number = a - 0.5 + Math.random() * (b - a + 1);
-  return Math.round(rand);
-}
-
-// CONSTANT FUNCTIONS
-function getCountByLevel(level: Level): number {
-  switch (level) {
-    case 'Elementary':
-      return randomInteger(2, 5);
-    case 'Intermediate':
-      return randomInteger(3, 8);
-    case 'Advanced':
-      return randomInteger(5, 10);
-  }
-}
-
-function getLength(): number {
-  return randomInteger(1, 5) * 10;
-}
-
-// MAIN FUNCTIONS
-function initialSettings(gp: GenParameters = {}): InitialSettings {
-  const is = {} as InitialSettings;
-
-  is.level = (!gp.level) ? 'Elementary' : gp.level;
-
-  if (!gp.count || gp.count < MIN_COUNT) {
-    is.count = getCountByLevel(is.level);
+  if (gp.level === 'random') {
+    const basicLevels: GenerateLevel[] = ['elementary', 'intermediate' , 'advanced'];
+    gp.level = basicLevels[randInt(0,2)]
   }
 
-  if (!gp.length || gp.length < MIN_LENGTH) {
-    is.length = getLength();
+  if (!gp.unitsCount || gp.unitsCount < 2) {
+    gp.unitsCount = randInt(2, 5); /* else */ 
+    if (gp.level === 'intermediate') gp.unitsCount = randInt(3, 8);
+    if (gp.level === 'advanced') gp.unitsCount = randInt(5, 10);
   }
 
-  return is;
+  if (!gp.beamLength || gp.beamLength == 0) {
+    gp.beamLength = randInt(1, 10) * 10
+  }
+
+  return gp as InitSettings;
 }
+
 
 function createUnits(count: number, length: number): Unit[] {
   const units: Unit[] = []
@@ -77,7 +33,7 @@ function createUnits(count: number, length: number): Unit[] {
   for (let i = 0; i < count; i++) {
     units.push({
       id: nanoid(10),
-      type: Types.Empty,
+      type: 'point',
       x: length / (count - 1) * i
     })
   }
@@ -85,15 +41,19 @@ function createUnits(count: number, length: number): Unit[] {
   return units;
 }
 
-// GENERATE
-function Generate(gp?: GenParameters) {
-  let { level, count, length }: InitialSettings = initialSettings(gp);
+export default function generate(gp: GenerateParameters = {}) {
 
-  const units: Unit[] = createUnits(count, length);
+  const { level, unitsCount, beamLength }: InitSettings = initSettings(gp);
 
-  console.log(units, level, count, length);
+
+  const units: Unit[] = createUnits(unitsCount, beamLength);
+
+  console.log(level, unitsCount, beamLength, units );
+
+
 }
 
-Generate({ level: 'Elementary' })
-Generate({ level: 'Intermediate' })
-Generate({ level: 'Advanced' })
+generate({ level: 'elementary' });
+generate({ level: 'intermediate' });
+generate({ level: 'advanced' });
+generate({ level: 'random' });
