@@ -1,8 +1,13 @@
 import { nanoid } from 'nanoid';
 
 import { GenerateLevel, Unit, GenerateParameters } from './core/global.core';
-import { InitSettings } from './core/generate.core';
-import { randInt } from './services/algebra';
+import { randInt, shuffleArray } from './services/algebra';
+
+export interface InitSettings {
+  level: GenerateLevel;
+  unitsCount: number;
+  beamLength: number;
+}
 
 const YOUNG = {
   'Aluminum': 7036041869.548,
@@ -138,6 +143,7 @@ function addSupport(units: Array<Unit>, level: GenerateLevel): void {
 
 
 function addMaterial(units: Array<Unit>, beamLength: number | number[]): boolean {
+  shuffleArray(units);
   for (let i = units.length - 1; i >= 0; i--) {
     if (units[i].type === 'point') {
       units[i].type = 'material';
@@ -154,6 +160,7 @@ function addMaterial(units: Array<Unit>, beamLength: number | number[]): boolean
 
 
 function addDistload(units: Array<Unit>, beamLength: number | number[]): boolean {
+  shuffleArray(units);
   for (let i = units.length - 1; i >= 0; i--) {
     if (units[i].type === 'point') {
       units[i].type = 'distload';
@@ -251,14 +258,5 @@ export default function generate(gp: GenerateParameters = {}) {
 
   return units;
 }
-
-console.log('random', generate({ level: 'random' }))
-console.log('elementar', generate({ level: 'elementary' }))
-console.log('intermedi', generate({ level: 'intermediate' }))
-console.log('advanced', generate({ level: 'advanced' }))
-console.log('advanced', generate({ level: 'advanced' }))
-console.log('advanced', generate({ level: 'advanced' }))
-console.log('advanced', generate({ level: 'advanced' }))
-console.log('advanced', generate({ level: 'advanced' }))
 
 
