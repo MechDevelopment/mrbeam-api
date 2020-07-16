@@ -25,7 +25,7 @@ app.get('/', function (req, res) {
 })
 
 app.get('/generate', function (req, res) {
-  res.send(JSON.stringify(generate()));
+  res.send(JSON.stringify(generate(), null, 4));
 })
 
 const port: string = process.env.PORT || '3000';
