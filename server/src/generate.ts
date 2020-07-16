@@ -4,11 +4,23 @@ import { GenerateLevel, Unit, GenerateParameters } from './core/global.core';
 import { InitSettings } from './core/generate.core';
 import { randInt } from './services/algebra';
 
+const YOUNG = {
+  'Aluminum': 7036041869.548,
+  'Steel': 20394324259.56,
+  'Copper': 11930679691.84,
+  'Magnesium': 4588722958.401,
+  'Lead': 1835489183.36
+}
+const YOUNG_VALS = Object.values(YOUNG);
+
+
+function randForce() {
+  return (randInt(0, 5) * 10 + 50) * (randInt(0, 1) ? 1 : -1)
+}
+
 
 function initSettings(gp: GenerateParameters): InitSettings {
-  if (!gp.level) gp.level = 'elementary';
-
-  if (gp.level === 'random') {
+  if (!gp.level || gp.level === 'random') {
     const basicLevels: GenerateLevel[] = ['elementary', 'intermediate', 'advanced'];
     gp.level = basicLevels[randInt(0, 2)]
   }
@@ -92,6 +104,57 @@ function addSupport(units: Array<Unit>): void {
 }
 
 
+function addMaterial(units: Array<Unit>, beamLength: number): boolean {
+  for (let i = units.length - 1; i >= 0; i--) {
+    if (units[i].type === 'point') {
+
+      const young = Object.values(YOUNG);
+
+      units[i].type = 'material';
+      units[i].x = [0, beamLength];
+
+
+      units[i].value = [
+        YOUNG_VALS[randInt(0, YOUNG_VALS.length - 1)],
+        1,
+        1
+      ];
+      return true;
+    }
+  }
+  return false;
+}
+
+
+function addDistload(units: Array<Unit>, beamLength: number): boolean {
+  for (let i = units.length - 1; i >= 0; i--) {
+    if (units[i].type === 'point') {
+      units[i].type = 'distload';
+      units[i].x = [0, beamLength];
+      units[i].value = randInt(0, 1) ? randForce() : [randForce(), randForce()];
+      return true;
+    }
+  }
+  return false;
+}
+
+
+
+function addHinge(units: Array<Unit>): void {
+
+}
+
+
+function addAdvancedDistload(units: Array<Unit>): void {
+
+}
+
+
+function addAdvancedMaterial(units: Array<Unit>): void {
+
+}
+
+
 function finish(units: Array<Unit>): void {
   const type = (randInt(0, 2))
     ? 'force'   // 66% add force
@@ -100,34 +163,9 @@ function finish(units: Array<Unit>): void {
   for (let i = 0; i < units.length; i++) {
     if (units[i].type === 'point') {
       units[i].type = type;
-      units[i].value = (randInt(0, 5) * 10 + 50) * (randInt(0, 1) ? 1 : -1);
+      units[i].value = randForce();
     }
   }
-}
-
-
-function addDistload(units: Array<Unit>): void {
-  
-}
-
-
-function addMaterial(units: Array<Unit>): void {
-  
-}
-
-
-function addHinge(units: Array<Unit>): void {
-  
-}
-
-
-function addAdvancedDistload(units: Array<Unit>): void {
-  
-}
-
-
-function addAdvancedMaterial(units: Array<Unit>): void {
-  
 }
 
 
@@ -140,22 +178,23 @@ export default function generate(gp: GenerateParameters = {}) {
   addSupport(units);
 
   if (level === 'intermediate') {
-    // Добавление распределнной нагрузки на всей длине балки
-    addDistload(units);
-
     // Добавление материала на всей длине балки
-    addMaterial(units);
+    if (!addMaterial(units, beamLength)) return;
+
+    // Добавление распределнной нагрузки на всей длине балки
+    if (!addDistload(units, beamLength)) return;
+
   }
 
   if (level === 'advanced') {
+    // Добавление нескольких материалов
+    addAdvancedMaterial(units);
+
     // Добавление шарнира
     addHinge(units);
 
     // Добавление распределнной нагрузки
     addAdvancedDistload(units);
-
-    // Добавление нескольких материалов
-    addAdvancedMaterial(units);
   }
 
   // Добиваем оставшиеся точки моментами и силами
@@ -166,6 +205,8 @@ export default function generate(gp: GenerateParameters = {}) {
 }
 
 generate({ level: 'elementary' });
+generate({ level: 'intermediate' });
+generate({ level: 'intermediate' });
 generate({ level: 'intermediate' });
 generate({ level: 'advanced' });
 generate({ level: 'random' });
