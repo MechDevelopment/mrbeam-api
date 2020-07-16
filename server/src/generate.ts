@@ -166,12 +166,37 @@ function addDistload(units: Array<Unit>, beamLength: number | number[]): boolean
 }
 
 
-function addAdvancedDistload(units: Array<Unit>, beamLength: number): boolean {
-  return false;
+function addAdvancedMaterial(units: Array<Unit>, beamLength: number) {
+  const rand: number = randInt(0, 2);
+
+  switch (rand) {
+    case 1: // 33% 1 material
+      addMaterial(units, beamLength);
+      break;
+
+    case 2: // 33% 2 materials
+      const center: number = units[Math.ceil(units.length / 2)].x as number;
+      addMaterial(units, [0, center]);
+      addMaterial(units, [center, beamLength]);
+      break;
+
+    case 3: // 33% 3 material
+      const c1: number = units[Math.ceil(units.length / 3)].x as number;
+      const c2: number = units[Math.ceil(2 * units.length / 3)].x as number;
+
+      addMaterial(units, [0, c1]);
+      addMaterial(units, [c1, c2]);
+      addMaterial(units, [c2, beamLength]);
+      break;
+
+    default:
+      break;
+  }
 }
 
 
-function addAdvancedMaterial(units: Array<Unit>, beamLength: number): boolean {
+function addAdvancedDistload(units: Array<Unit>, beamLength: number): boolean {
+
   return false;
 }
 
@@ -208,7 +233,7 @@ export default function generate(gp: GenerateParameters = {}) {
 
   if (level === 'advanced') {
     // Добавление нескольких материалов или одного
-    if (!addAdvancedMaterial(units, beamLength)) return units;
+    addAdvancedMaterial(units, beamLength);
 
     // Добавление распределнных нагрузок
     if (!addAdvancedDistload(units, beamLength)) return units;
