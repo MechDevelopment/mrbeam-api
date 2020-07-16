@@ -170,17 +170,17 @@ function addAdvancedMaterial(units: Array<Unit>, beamLength: number) {
   const rand: number = randInt(0, 2);
 
   switch (rand) {
-    case 1: // 33% 1 material
+    case 0: // 33% 1 material
       addMaterial(units, beamLength);
       break;
 
-    case 2: // 33% 2 materials
+    case 1: // 33% 2 materials
       const center: number = units[Math.ceil(units.length / 2)].x as number;
       addMaterial(units, [0, center]);
       addMaterial(units, [center, beamLength]);
       break;
 
-    case 3: // 33% 3 material
+    case 2: // 33% 3 material
       const c1: number = units[Math.ceil(units.length / 3)].x as number;
       const c2: number = units[Math.ceil(2 * units.length / 3)].x as number;
 
@@ -195,9 +195,16 @@ function addAdvancedMaterial(units: Array<Unit>, beamLength: number) {
 }
 
 
-function addAdvancedDistload(units: Array<Unit>, beamLength: number): boolean {
+function addAdvancedDistload(units: Array<Unit>, beamLength: number, unitsCount: number): boolean {
+  if (randInt(0, 2)) { // 66% chance
+    const part = beamLength / (unitsCount - 1);
+    const rand = randInt(0, unitsCount - 1);
 
-  return false;
+    if (randInt(0, 1)) return addDistload(units, [0, (1 + rand) * part]);
+    else return addDistload(units, [ rand * part, beamLength]);
+  }
+
+  return true;
 }
 
 
@@ -236,7 +243,7 @@ export default function generate(gp: GenerateParameters = {}) {
     addAdvancedMaterial(units, beamLength);
 
     // Добавление распределнных нагрузок
-    if (!addAdvancedDistload(units, beamLength)) return units;
+    if (!addAdvancedDistload(units, beamLength, unitsCount)) return units;
   }
 
   // Добиваем оставшиеся точки моментами и силами
