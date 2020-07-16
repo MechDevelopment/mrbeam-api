@@ -32,7 +32,7 @@ function initSettings(gp: GenerateParameters): InitSettings {
   }
 
   if (!gp.beamLength || gp.beamLength == 0) {
-    gp.beamLength = randInt(1, 10) * 10;
+    gp.beamLength = randInt(8, 16);
   }
 
   return gp as InitSettings;
@@ -107,17 +107,26 @@ function addSupport(units: Array<Unit>): void {
 function addMaterial(units: Array<Unit>, beamLength: number): boolean {
   for (let i = units.length - 1; i >= 0; i--) {
     if (units[i].type === 'point') {
+      const young: number = YOUNG_VALS[randInt(0, YOUNG_VALS.length - 1)];
+      const size: number = randInt(10, 30) * 0.01;
 
-      const young = Object.values(YOUNG);
+      let area: number;
+      let inertia: number;
+
+      if (randInt(0, 1)) { // 50% square
+        area = size * size;
+        inertia = area * area / 12
+      } else { // 50% circle
+        area = size * size * Math.PI / 4;
+        inertia = size * size * size * size * Math.PI / 64;
+      }
 
       units[i].type = 'material';
       units[i].x = [0, beamLength];
-
-
       units[i].value = [
-        YOUNG_VALS[randInt(0, YOUNG_VALS.length - 1)],
-        1,
-        1
+        young,
+        inertia,
+        area
       ];
       return true;
     }
