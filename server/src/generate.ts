@@ -69,13 +69,33 @@ function addFixed(units: Array<Unit>): void {
 }
 
 
-function addSimple(units: Array<Unit>): void {
+function addHinge(units: Array<Unit>, level: GenerateLevel, simples: [number, number]): void {
+  if (level !== 'advanced') return;
+
+  if (simples[1] < simples[0]) {
+    [simples[0], simples[1]] = [simples[1], simples[0]];
+  }
+
+  if (simples[1] - simples[0] < 2) return;
+
+  const rand = randInt(simples[0] + 1, simples[1] - 1);
+
+  if (randInt(0, 1)) { // 50% chance
+    units[rand].type = 'hinge';
+  }
+}
+
+
+function addSimple(units: Array<Unit>, level: GenerateLevel): void {
   const shift: number = randInt(0, Math.floor(units.length / 2) - 1);
 
   if (randInt(0, 1)) {
     // 50% center position
     units[shift].type = 'simple';
     units[units.length - shift - 1].type = 'simple';
+
+    addHinge(units, level, [shift, units.length - shift - 1]);
+
   } else {
     // 50% left and right positions
     if (randInt(0, 1)) {
@@ -92,24 +112,28 @@ function addSimple(units: Array<Unit>): void {
       if (randInt(0, 1)) {
         units[0].type = 'simple';
         units[units.length - shift - 1].type = 'simple';
+
+        addHinge(units, level, [0, units.length - shift - 1]);
       } else {
         units[shift].type = 'simple';
         units[units.length - 1].type = 'simple';
+
+        addHinge(units, level, [shift, units.length - 1]);
       }
     }
   }
 }
 
 
-function addSupport(units: Array<Unit>): void {
+function addSupport(units: Array<Unit>, level: GenerateLevel): void {
   if (units.length < 3) addFixed(units);
 
   if (units.length > 2 && units.length < 6) {
-    if (randInt(0, 2)) addSimple(units); // 66% simple
+    if (randInt(0, 2)) addSimple(units, level); // 66% simple
     else addFixed(units); // 33% fixed
   }
 
-  if (units.length > 5) addSimple(units);
+  if (units.length > 5) addSimple(units, level);
 }
 
 
@@ -138,13 +162,6 @@ function addDistload(units: Array<Unit>, beamLength: number | number[]): boolean
       return true;
     }
   }
-  return false;
-}
-
-
-
-function addHinge(units: Array<Unit>): boolean {
-  
   return false;
 }
 
@@ -178,8 +195,8 @@ export default function generate(gp: GenerateParameters = {}) {
   const { level, unitsCount, beamLength }: InitSettings = initSettings(gp);
   const units: Array<Unit> = createUnits(unitsCount, beamLength);
 
-  // Добавление закреплений
-  addSupport(units);
+  // Добавление закреплений и шарнира
+  addSupport(units, level);
 
   if (level === 'intermediate') {
     // Добавление материала на всей длине балки
@@ -187,33 +204,29 @@ export default function generate(gp: GenerateParameters = {}) {
 
     // Добавление распределнной нагрузки на всей длине балки
     if (!addDistload(units, beamLength)) return units;
-
   }
 
   if (level === 'advanced') {
     // Добавление нескольких материалов или одного
     if (!addAdvancedMaterial(units, beamLength)) return units;
 
-
-    // Добавление шарнира
-    if (!addHinge(units)) return units;
-
-    // Добавление распределнной нагрузки
+    // Добавление распределнных нагрузок
     if (!addAdvancedDistload(units, beamLength)) return units;
-
   }
 
   // Добиваем оставшиеся точки моментами и силами
   finish(units);
 
-  console.log(level, unitsCount, beamLength, units);
   return units;
 }
 
-generate({ level: 'elementary' });
-generate({ level: 'intermediate' });
-generate({ level: 'intermediate' });
-generate({ level: 'intermediate' });
-generate({ level: 'advanced' });
-generate({ level: 'random' });
+console.log('random', generate({ level: 'random' }))
+console.log('elementar', generate({ level: 'elementary' }))
+console.log('intermedi', generate({ level: 'intermediate' }))
+console.log('advanced', generate({ level: 'advanced' }))
+console.log('advanced', generate({ level: 'advanced' }))
+console.log('advanced', generate({ level: 'advanced' }))
+console.log('advanced', generate({ level: 'advanced' }))
+console.log('advanced', generate({ level: 'advanced' }))
+
 
