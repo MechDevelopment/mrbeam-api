@@ -19,6 +19,15 @@ function randForce() {
 }
 
 
+function randMaterial(): [number, number] {
+  const size: number = randInt(10, 30) * 0.01;
+  if (randInt(0, 1))  // 50% square
+    return [size * size * size * size / 12, size * size];
+  else  // 50% circle
+    return [size * size * size * size * Math.PI / 64, size * size * Math.PI / 4]
+}
+
+
 function initSettings(gp: GenerateParameters): InitSettings {
   if (!gp.level || gp.level === 'random') {
     const basicLevels: GenerateLevel[] = ['elementary', 'intermediate', 'advanced'];
@@ -104,29 +113,14 @@ function addSupport(units: Array<Unit>): void {
 }
 
 
-function addMaterial(units: Array<Unit>, beamLength: number): boolean {
+function addMaterial(units: Array<Unit>, beamLength: number | number[]): boolean {
   for (let i = units.length - 1; i >= 0; i--) {
     if (units[i].type === 'point') {
-      const young: number = YOUNG_VALS[randInt(0, YOUNG_VALS.length - 1)];
-      const size: number = randInt(10, 30) * 0.01;
-
-      let area: number;
-      let inertia: number;
-
-      if (randInt(0, 1)) { // 50% square
-        area = size * size;
-        inertia = area * area / 12
-      } else { // 50% circle
-        area = size * size * Math.PI / 4;
-        inertia = size * size * size * size * Math.PI / 64;
-      }
-
       units[i].type = 'material';
-      units[i].x = [0, beamLength];
+      units[i].x = (typeof beamLength === 'number') ? [0, beamLength] : beamLength;
       units[i].value = [
-        young,
-        inertia,
-        area
+        YOUNG_VALS[randInt(0, YOUNG_VALS.length - 1)],
+        ...randMaterial()
       ];
       return true;
     }
@@ -135,11 +129,11 @@ function addMaterial(units: Array<Unit>, beamLength: number): boolean {
 }
 
 
-function addDistload(units: Array<Unit>, beamLength: number): boolean {
+function addDistload(units: Array<Unit>, beamLength: number | number[]): boolean {
   for (let i = units.length - 1; i >= 0; i--) {
     if (units[i].type === 'point') {
       units[i].type = 'distload';
-      units[i].x = [0, beamLength];
+      units[i].x = (typeof beamLength === 'number') ? [0, beamLength] : beamLength;
       units[i].value = randInt(0, 1) ? randForce() : [randForce(), randForce()];
       return true;
     }
@@ -149,18 +143,19 @@ function addDistload(units: Array<Unit>, beamLength: number): boolean {
 
 
 
-function addHinge(units: Array<Unit>): void {
-
+function addHinge(units: Array<Unit>): boolean {
+  
+  return false;
 }
 
 
-function addAdvancedDistload(units: Array<Unit>): void {
-
+function addAdvancedDistload(units: Array<Unit>, beamLength: number): boolean {
+  return false;
 }
 
 
-function addAdvancedMaterial(units: Array<Unit>): void {
-
+function addAdvancedMaterial(units: Array<Unit>, beamLength: number): boolean {
+  return false;
 }
 
 
@@ -188,22 +183,24 @@ export default function generate(gp: GenerateParameters = {}) {
 
   if (level === 'intermediate') {
     // Добавление материала на всей длине балки
-    if (!addMaterial(units, beamLength)) return;
+    if (!addMaterial(units, beamLength)) return units;
 
     // Добавление распределнной нагрузки на всей длине балки
-    if (!addDistload(units, beamLength)) return;
+    if (!addDistload(units, beamLength)) return units;
 
   }
 
   if (level === 'advanced') {
-    // Добавление нескольких материалов
-    addAdvancedMaterial(units);
+    // Добавление нескольких материалов или одного
+    if (!addAdvancedMaterial(units, beamLength)) return units;
+
 
     // Добавление шарнира
-    addHinge(units);
+    if (!addHinge(units)) return units;
 
     // Добавление распределнной нагрузки
-    addAdvancedDistload(units);
+    if (!addAdvancedDistload(units, beamLength)) return units;
+
   }
 
   // Добиваем оставшиеся точки моментами и силами
