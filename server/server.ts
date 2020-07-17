@@ -24,9 +24,24 @@ app.get('/', function (req, res) {
   }, null, 4));
 })
 
+
 app.get('/generate', function (req, res) {
   res.send(JSON.stringify(generate(), null, 4));
 })
+
+app.post("/generate", (req, res) => {
+
+  if(!req.body) return res.send(JSON.stringify(generate(), null, 4));
+
+  try {
+    res.send(JSON.stringify(generate(req.body), null, 4));
+  } catch (error) {
+    res.sendStatus(400)
+  }
+
+});
+
+
 
 const port: string = process.env.PORT || '3000';
 
