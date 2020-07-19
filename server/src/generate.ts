@@ -1,10 +1,10 @@
 import { nanoid } from 'nanoid';
 
-import { GenerateLevel, Unit, GenerateParameters } from './core/global.core';
+import { GenerateComplexity, Unit, GenerateParameters } from './core/global.core';
 import { randInt, shuffleArray } from './services/algebra';
 
 export interface InitSettings {
-  level: GenerateLevel;
+  complexity: GenerateComplexity;
   unitsCount: number;
   beamLength: number;
 }
@@ -34,15 +34,15 @@ function randMaterial(): [number, number] {
 
 
 function initSettings(gp: GenerateParameters): InitSettings {
-  if (!gp.level || gp.level === 'random') {
-    const basicLevels: GenerateLevel[] = ['elementary', 'intermediate', 'advanced'];
-    gp.level = basicLevels[randInt(0, 2)]
+  if (!gp.complexity || gp.complexity === 'random') {
+    const basicComplexity: GenerateComplexity[] = ['elementary', 'intermediate', 'advanced'];
+    gp.complexity = basicComplexity[randInt(0, 2)]
   }
 
   if (!gp.unitsCount || gp.unitsCount < 2) {
     gp.unitsCount = randInt(2, 6); /* else */
-    if (gp.level === 'intermediate') gp.unitsCount = randInt(4, 8);
-    if (gp.level === 'advanced') gp.unitsCount = randInt(6, 10);
+    if (gp.complexity === 'intermediate') gp.unitsCount = randInt(4, 8);
+    if (gp.complexity === 'advanced') gp.unitsCount = randInt(6, 10);
   }
 
   if (!gp.beamLength || gp.beamLength == 0) {
@@ -74,7 +74,7 @@ function addFixed(units: Array<Unit>): void {
 }
 
 
-function addHinge(units: Array<Unit>, level: GenerateLevel, simples: [number, number]): void {
+function addHinge(units: Array<Unit>, level: GenerateComplexity, simples: [number, number]): void {
   if (level !== 'advanced') return;
   if (units.length < 4) return;
 
@@ -92,7 +92,7 @@ function addHinge(units: Array<Unit>, level: GenerateLevel, simples: [number, nu
 }
 
 
-function addSimple(units: Array<Unit>, level: GenerateLevel): void {
+function addSimple(units: Array<Unit>, complexity: GenerateComplexity): void {
   const shift: number = randInt(0, Math.floor(units.length / 2) - 1);
 
   if (randInt(0, 1)) {
@@ -100,7 +100,7 @@ function addSimple(units: Array<Unit>, level: GenerateLevel): void {
     units[shift].type = 'simple';
     units[units.length - shift - 1].type = 'simple';
 
-    addHinge(units, level, [shift, units.length - shift - 1]);
+    addHinge(units, complexity, [shift, units.length - shift - 1]);
 
   } else {
     // 50% left and right positions
@@ -119,27 +119,27 @@ function addSimple(units: Array<Unit>, level: GenerateLevel): void {
         units[0].type = 'simple';
         units[units.length - shift - 1].type = 'simple';
 
-        addHinge(units, level, [0, units.length - shift - 1]);
+        addHinge(units, complexity, [0, units.length - shift - 1]);
       } else {
         units[shift].type = 'simple';
         units[units.length - 1].type = 'simple';
 
-        addHinge(units, level, [shift, units.length - 1]);
+        addHinge(units, complexity, [shift, units.length - 1]);
       }
     }
   }
 }
 
 
-function addSupport(units: Array<Unit>, level: GenerateLevel): void {
+function addSupport(units: Array<Unit>, complexity: GenerateComplexity): void {
   if (units.length < 3) addFixed(units);
 
   if (units.length > 2 && units.length < 6) {
-    if (randInt(0, 2)) addSimple(units, level); // 66% simple
+    if (randInt(0, 2)) addSimple(units, complexity); // 66% simple
     else addFixed(units); // 33% fixed
   }
 
-  if (units.length > 5) addSimple(units, level);
+  if (units.length > 5) addSimple(units, complexity);
 }
 
 
@@ -223,13 +223,13 @@ function finish(units: Array<Unit>): void {
 
 export default function generate(gp: GenerateParameters = {}) {
 
-  const { level, unitsCount, beamLength }: InitSettings = initSettings(gp);
+  const { complexity, unitsCount, beamLength }: InitSettings = initSettings(gp);
   const units: Array<Unit> = createUnits(unitsCount, beamLength);
 
   // Добавление закреплений и шарнира
-  addSupport(units, level);
+  addSupport(units, complexity);
 
-  if (level === 'intermediate' && unitsCount > 3) {
+  if (complexity === 'intermediate' && unitsCount > 3) {
     // Добавление материала на всей длине балки
     if (!addMaterial(units, beamLength)) return units;
 
@@ -237,7 +237,7 @@ export default function generate(gp: GenerateParameters = {}) {
     if (!addDistload(units, beamLength)) return units;
   }
 
-  if (level === 'advanced' && unitsCount > 5) {
+  if (complexity === 'advanced' && unitsCount > 5) {
     // Добавление нескольких материалов или одного
     addAdvancedMaterial(units, beamLength);
 

@@ -1,9 +1,9 @@
 export type UnitType = 'point' | 'force' | 'moment' | 'distload' | 'fixed' | 'simple' | 'hinge' | 'material';
 
-export type GenerateLevel = 'elementary' | 'intermediate' | 'advanced' | 'random';
+export type GenerateComplexity = 'elementary' | 'intermediate' | 'advanced' | 'random';
 
 export interface GenerateParameters {
-  level?: GenerateLevel;
+  complexity?: GenerateComplexity;
   unitsCount?: number;
   beamLength?: number;
 }

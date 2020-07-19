@@ -31,15 +31,8 @@ app.get('/generate', function (req, res) {
 })
 
 app.post("/generate", (req, res) => {
-
   console.log("body: ", req.body);
-  
-  try {
-    res.send(JSON.stringify(generate(req.body), null, 4));
-  } catch (error) {
-    res.sendStatus(400)
-  }
-
+  res.send(JSON.stringify(generate(req.body)));
 });
 
 
