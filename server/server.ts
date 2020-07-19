@@ -33,10 +33,7 @@ app.get('/generate', function (req, res) {
 app.post("/generate", (req, res) => {
 
   console.log("body: ", req.body);
-  console.log(!req.body);
-
-  //if(!req.body) return res.send(JSON.stringify(generate(), null, 4));
-
+  
   try {
     res.send(JSON.stringify(generate(req.body), null, 4));
   } catch (error) {

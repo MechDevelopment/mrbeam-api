@@ -76,6 +76,7 @@ function addFixed(units: Array<Unit>): void {
 
 function addHinge(units: Array<Unit>, level: GenerateLevel, simples: [number, number]): void {
   if (level !== 'advanced') return;
+  if (units.length < 4) return;
 
   if (simples[1] < simples[0]) {
     [simples[0], simples[1]] = [simples[1], simples[0]];
