@@ -22,11 +22,7 @@ fetch(URL, {
   .then(data => console.table(data));
 ```
 Body is an object with optional parameters:
->'complexity' - the complexity of the beam,
-
->'unitsCount' - number of elements, including material,
-
->'beamLength' - beam length.
+>'complexity' - the complexity of the beam, 'unitsCount' - number of elements, including material, 'beamLength'.
 
 | 'complexity'   | 'unitsCount' | features               |
 |----------------|--------------|------------------------|
@@ -36,6 +32,9 @@ Body is an object with optional parameters:
 | 'advanced'     | 6 - 10       | 'hinge'                |
 
 'complexity' and 'unitsCount' can conflict with each other, but 'unitsCount' is more important.
+
+## Contributing
+If errors are found, please open an issue to discuss.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
