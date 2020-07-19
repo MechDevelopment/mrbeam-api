@@ -40,9 +40,9 @@ function initSettings(gp: GenerateParameters): InitSettings {
   }
 
   if (!gp.unitsCount || gp.unitsCount < 2) {
-    gp.unitsCount = randInt(2, 5); /* else */
-    if (gp.level === 'intermediate') gp.unitsCount = randInt(3, 8);
-    if (gp.level === 'advanced') gp.unitsCount = randInt(5, 10);
+    gp.unitsCount = randInt(2, 6); /* else */
+    if (gp.level === 'intermediate') gp.unitsCount = randInt(4, 8);
+    if (gp.level === 'advanced') gp.unitsCount = randInt(6, 10);
   }
 
   if (!gp.beamLength || gp.beamLength == 0) {
@@ -174,7 +174,7 @@ function addDistload(units: Array<Unit>, beamLength: number | number[]): boolean
 
 
 function addAdvancedMaterial(units: Array<Unit>, beamLength: number) {
-  const rand: number = randInt(0, 2);
+  const rand: number = randInt(0, 1);
 
   switch (rand) {
     case 0: // 33% 1 material
@@ -185,15 +185,6 @@ function addAdvancedMaterial(units: Array<Unit>, beamLength: number) {
       const center: number = units[Math.ceil(units.length / 2)].x as number;
       addMaterial(units, [0, center]);
       addMaterial(units, [center, beamLength]);
-      break;
-
-    case 2: // 33% 3 material
-      const c1: number = units[Math.ceil(units.length / 3)].x as number;
-      const c2: number = units[Math.ceil(2 * units.length / 3)].x as number;
-
-      addMaterial(units, [0, c1]);
-      addMaterial(units, [c1, c2]);
-      addMaterial(units, [c2, beamLength]);
       break;
 
     default:
@@ -237,7 +228,7 @@ export default function generate(gp: GenerateParameters = {}) {
   // Добавление закреплений и шарнира
   addSupport(units, level);
 
-  if (level === 'intermediate') {
+  if (level === 'intermediate' && unitsCount > 3) {
     // Добавление материала на всей длине балки
     if (!addMaterial(units, beamLength)) return units;
 
@@ -245,7 +236,7 @@ export default function generate(gp: GenerateParameters = {}) {
     if (!addDistload(units, beamLength)) return units;
   }
 
-  if (level === 'advanced') {
+  if (level === 'advanced' && unitsCount > 5) {
     // Добавление нескольких материалов или одного
     addAdvancedMaterial(units, beamLength);
 
