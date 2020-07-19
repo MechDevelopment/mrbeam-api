@@ -4,6 +4,7 @@ import generate from './src/generate';
 
 const app: express.Application = express();
 
+app.use(express.json());
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
