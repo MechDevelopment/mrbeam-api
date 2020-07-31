@@ -6,9 +6,9 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
+    "test": "jasmine",
     "locBuild": "tsc -w",
     "locStart": "nodemon dist/server.js"
-
   },
   "repository": {
     "type": "git",
@@ -34,5 +34,8 @@
     "express": "^4.17.1",
     "nanoid": "^3.1.10",
     "typescript": "^3.9.5"
+  },
+  "devDependencies": {
+    "jasmine": "^3.6.1"
   }
 }
