@@ -1,3 +1,4 @@
+import { INode } from './../core/calculate.core';
 /** Class for the formation of finite elements
  *
  * Abbreviation and terms:
@@ -27,13 +28,26 @@
  *                              / локальный вектор из распределенной нагрузки
  */
 
-export default class Elem {
-  private material = [1, 1, 1]
-  
-
+export default class Elem {  
   constructor(
-    private nodes
-  ) {
+    public nodes: [INode, INode],
+    private distload: Function,
+    private material: [number, number, number]
+  )
+  {
+    // Что же нам тут нужно? Это у нас конечный элемент, да по сути ничего
+    /**
+     * Локальная матрица
+     * длина между двумя узлами
+     * и сами узлы
+     * 
+     * Вот что должно быть в узлах
+     * тут интереснее
+     *  Узел включает информацию
+     *  расположение узла
+     *  силу или момент
+     */
+
   }
 
   localMatrix(): Array<Array<number>> {
