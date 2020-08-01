@@ -28,6 +28,48 @@
  */
 
 export default class Elem {
+  private material = [1, 1, 1]
+  
 
+  constructor(
+    private nodes
+  ) {
+  }
+
+  localMatrix(): Array<Array<number>> {
+    const EJ: number = this.material[0] * this.material[1]
+    const len: number = this.length
+
+    return [
+      [
+        (1 / len ** 3) * (EJ * 12),
+        (1 / len ** 2) * (EJ * 6),
+        (1 / len ** 3) * (EJ * -12),
+        (1 / len ** 2) * (EJ * 6),
+      ],
+      [
+        (1 / len ** 2) * (EJ * 6),
+        (1 / len ** 1) * (EJ * 4),
+        (1 / len ** 2) * (EJ * -6),
+        (1 / len ** 1) * (EJ * 2),
+      ],
+      [
+        (1 / len ** 3) * (EJ * -12),
+        (1 / len ** 2) * (EJ * -6),
+        (1 / len ** 3) * (EJ * 12),
+        (1 / len ** 2) * (EJ * -6),
+      ],
+      [
+        (1 / len ** 2) * (EJ * 6),
+        (1 / len ** 1) * (EJ * 2),
+        (1 / len ** 2) * (EJ * -6),
+        (1 / len ** 1) * (EJ * 4),
+      ],
+    ]
+  }
+  
+  get length(): number {
+    return this.nodes[1].x - this.nodes[0].x
+  }
 }
 
