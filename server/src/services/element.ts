@@ -28,11 +28,13 @@ import { INode } from './../core/calculate.core';
  *                              / локальный вектор из распределенной нагрузки
  */
 
-export default class Elem {  
+export default class Elem { 
+  public distload?: [number, number]
+  public material?: [number, number, number]
+
   constructor(
     public nodes: [INode, INode],
-    private distload?: Function,
-    private material?: [number, number, number]
+    
   )
   {
     // Что же нам тут нужно? Это у нас конечный элемент, да по сути ничего
