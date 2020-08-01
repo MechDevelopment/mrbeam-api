@@ -31,8 +31,8 @@ import { INode } from './../core/calculate.core';
 export default class Elem {  
   constructor(
     public nodes: [INode, INode],
-    private distload: Function,
-    private material: [number, number, number]
+    private distload?: Function,
+    private material?: [number, number, number]
   )
   {
     // Что же нам тут нужно? Это у нас конечный элемент, да по сути ничего
