@@ -28,7 +28,7 @@ import { Unit } from './core/global.core';
 import { Graph } from './core/calculate.core'
 
 import graph from './services/graph'
-import parse from './services/parse';
+import {parse} from './services/parse';
 import Elem from './services/element';
 
 

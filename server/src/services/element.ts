@@ -29,8 +29,8 @@ import { INode } from './../core/calculate.core';
  */
 
 export default class Elem { 
-  public distload?: [number, number]
-  public material?: [number, number, number]
+  public distload: [number, number] = [0, 0]
+  public material: [number, number, number] = [1, 1, 1]
 
   constructor(
     public nodes: [INode, INode],
