@@ -83,6 +83,10 @@ export default class Elem {
       ],
     ]
   }
+
+  addDistload(value: any) {
+    this.distload = value
+  }
   
   get length(): number {
     return this.nodes[1].x - this.nodes[0].x
