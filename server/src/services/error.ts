@@ -1,10 +1,13 @@
 import { Unit } from './../core/global.core';
 
+const TYPE_INCLUDE = ['force', 'moment', 'distload', 'material', 'fixed', 'simple', 'hinge']
+const VALUE_TYPES = ['force', 'moment', 'distload', 'material']
+
 export function handleErrors(units: Array<Unit>) {
   let countOfFixed = 0
   let countOfSimple = 0
 
-  // Handle errors
+  // Type errors
   if (!Array.isArray(units)) throw new Error('TypeError | hint: data should be an array')
 
   for (let unit of units) {
@@ -18,22 +21,28 @@ export function handleErrors(units: Array<Unit>) {
       throw new Error('TypeError | hint: property <x> should be a number or an array')
     }  
 
-    if (!['force', 'moment', 'distload', 'material', 'fixed', 'simple', 'hinge'].includes(unit.type)) {
-      throw new Error('Bad units <type>, should be force, moment, distload, material, fixed, simple, hinge')
+    if (!TYPE_INCLUDE.includes(unit.type)) {
+      throw new Error('TypeError | hint: property <type> should have a specific value')
     }
 
-    if (['force', 'moment', 'distload', 'material'].includes(unit.type) && !unit.hasOwnProperty('value')){
-      throw new Error('Bad units format, some units should have <value> property')
+    if (VALUE_TYPES.includes(unit.type)){
+      if (!unit.hasOwnProperty('value')){
+        throw new Error('TypeError | hint: some units should have <value> property')
+      } else {
+        if (typeof unit.value !== 'number' && !Array.isArray(unit.value) && Object.is(+unit.value!, NaN)) {
+          throw new Error('TypeError | hint: property <value> should be a number or an array')
+        }
+      }
     }
 
     if (unit.type === 'fixed') countOfFixed++
     if (unit.type === 'simple') countOfSimple++
   }
 
-  if (units.length === 0 || units.length === 1) throw new Error('Not enough units')
+  // Format errors
+  if (units.length === 0 || units.length === 1) throw new Error('FormatError | hint: not enough units')
 
   if (countOfFixed === 0 && countOfSimple < 2) {
-    throw new Error('Bad units format, units should have minimum 2 simple or 1 fixed supports')
+    throw new Error('FormatError | hint: units should have more supports')
   }
-
 }
