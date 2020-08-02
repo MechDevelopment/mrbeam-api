@@ -30,9 +30,13 @@ import { Graph } from './core/calculate.core'
 import graph from './services/graph'
 import {parse} from './services/parse';
 import Elem from './services/element';
+import { handleErrors } from './services/error';
 
 
 export default function calculate(units: Array<Unit>): Graph {
+
+  handleErrors(units)
+  
   const elems: Array<Elem> = parse(units);
 
   // А что если объединить парс юнитов и фрагментацию?
