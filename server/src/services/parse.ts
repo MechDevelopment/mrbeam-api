@@ -7,25 +7,19 @@ import Elem from "./element";
 function decryption(unit: Unit, elem: Elem) {
   switch (unit.type) {
     case "force":
-      elem.nodes[0].force += unit.value as number
+      elem.addForce(unit.value as number)
       break;
     case "moment":
-      elem.nodes[0].moment += unit.value as number
-      break;
-    case "fixed":
-      elem.nodes[0].support = 'fixed'
-      break;
-    case "simple":
-      elem.nodes[0].support = 'simple'
-      break;
-    case "hinge":
-      elem.nodes[0].support = 'hinge'
+      elem.addMoment(unit.value as number)
       break;
     case "distload":
       elem.addDistload(unit.value as number | [number, number])
       break;
     case "material":
-      elem.material = unit.value as [number, number, number]
+      elem.addMaterial(unit.value as [number, number, number])
+      break;
+    default:
+      elem.addSupport(unit.type)
       break;
   }
 }
@@ -37,7 +31,7 @@ export function parse(units: Array<Unit>): Array<Elem> {
   const sortedCoords: Array<number> = Array.from(setOfCoords).sort((a, b) => a - b)
 
   const nodes: Array<INode> = sortedCoords.map(coord => ({ x: coord, force: 0, moment: 0 }))
-  const elems: Array<Elem> = nodes.map((node, i) => new Elem([node, nodes[i + 1]])).slice(0, -1)
+  const elems: Array<Elem> = nodes.map((node, i) => new Elem([node, nodes[i + 1]])) //.slice(0, -1) обработка последней точки нужна ведь!
 
   for (const unit of units) {
     if (typeof unit.x === "number") {
@@ -50,5 +44,5 @@ export function parse(units: Array<Unit>): Array<Elem> {
     }
   }
 
-  return elems
+  return elems.slice(0, -1) // Убрал последний элемент за ненадобностью
 }

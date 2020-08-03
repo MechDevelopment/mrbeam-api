@@ -29,8 +29,8 @@ import { INode } from './../core/calculate.core';
  */
 
 export default class Elem { 
-  public distload: [number, number] = [0, 0]
-  public material: [number, number, number] = [1, 1, 1]
+  private distload: [number, number] = [0, 0]
+  private material: [number, number, number] = [1, 1, 1]
 
   constructor(
     public nodes: [INode, INode],
@@ -84,8 +84,24 @@ export default class Elem {
     ]
   }
 
+  addForce(value: any) {
+    this.nodes[0].force += value
+  }
+
+  addMoment(value: any) {
+    this.nodes[0].moment += value
+  }
+
+  addSupport(value: any) {
+    this.nodes[0].support = value
+  }
+
   addDistload(value: any) {
     this.distload = value
+  }
+
+  addMaterial(value: any) {
+    this.material = value
   }
   
   get length(): number {
