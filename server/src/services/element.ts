@@ -28,15 +28,14 @@ import { INode } from './../core/calculate.core';
  *                              / локальный вектор из распределенной нагрузки
  */
 
-export default class Elem { 
+export class Elem {
   private distload: [number, number] = [0, 0]
   private material: [number, number, number] = [1, 1, 1]
 
   constructor(
     public nodes: [INode, INode],
-    
-  )
-  {
+
+  ) {
     // Что же нам тут нужно? Это у нас конечный элемент, да по сути ничего
     /**
      * Локальная матрица
@@ -84,28 +83,33 @@ export default class Elem {
     ]
   }
 
-  addForce(value: any) {
+
+  // SETTERS
+  addForce(value: number) {
     this.nodes[0].force += value
   }
 
-  addMoment(value: any) {
+  addMoment(value: number) {
     this.nodes[0].moment += value
   }
 
-  addSupport(value: any) {
+  addSupport(value: "fixed" | "simple" | "hinge") {
     this.nodes[0].support = value
   }
 
-  addDistload(value: any) {
-    this.distload = value
+  addDistload(value: number | [number, number]) {
+    // this.distload = value
   }
 
-  addMaterial(value: any) {
+  addMaterial(value: [number, number, number]) {
     this.material = value
   }
-  
+
+
+  // GETTERS
   get length(): number {
     return this.nodes[1].x - this.nodes[0].x
   }
+
 }
 

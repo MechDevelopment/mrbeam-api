@@ -1,26 +1,26 @@
 import { Unit } from './../core/global.core';
 import { INode } from './../core/calculate.core';
 
-import Elem from "./element";
+import { Elem } from "./element";
 
 
-function decryption(unit: Unit, elem: Elem) {
+export function decryption(unit: Unit, elem: Elem) {
   switch (unit.type) {
     case "force":
       elem.addForce(unit.value as number)
-      break;
+      break
     case "moment":
       elem.addMoment(unit.value as number)
-      break;
+      break
     case "distload":
       elem.addDistload(unit.value as number | [number, number])
-      break;
+      break
     case "material":
       elem.addMaterial(unit.value as [number, number, number])
-      break;
+      break
     default:
-      elem.addSupport(unit.type)
-      break;
+      elem.addSupport(unit.type as "fixed" | "simple" | "hinge")
+      break
   }
 }
 
