@@ -29,8 +29,8 @@ import { INode } from './../core/calculate.core';
  */
 
 export class Elem {
-  private distload: [number, number] = [0, 0]
-  private material: [number, number, number] = [1, 1, 1]
+  public distload: Array<[number, number]> = []
+  public material: [number, number, number] = [1, 1, 1]
 
   constructor(
     public nodes: [INode, INode],
@@ -98,7 +98,8 @@ export class Elem {
   }
 
   addDistload(value: number | [number, number]) {
-    // this.distload = value
+    if (typeof value === 'number') value = [value, value]
+    this.distload.push(value)
   }
 
   addMaterial(value: [number, number, number]) {
