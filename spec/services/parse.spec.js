@@ -33,8 +33,77 @@ describe('decription function and Elem class setters', () => {
   })
 
   it('should add material to elem', () => {
-    decryption({ type: 'material', value: [33,33,33] }, elems[0])
-    expect(elems[0].material).toEqual([33,33,33])
+    decryption({ type: 'material', value: [33, 33, 33] }, elems[0])
+    expect(elems[0].material).toEqual([33, 33, 33])
   })
 
+})
+
+describe('parse function create elems from units', () => {
+  const units1 = [
+    { "type": "simple", "x": 0 },
+    { "type": "force", "x": 4, "value": 100 },
+    { "type": "simple", "x": 8 }
+  ]
+
+  const units2 = [
+    { "type": "material", "x": [0, 11], "value": [33, 33, 33] },
+    { "type": "simple", "x": 0 },
+    { "type": "moment", "x": 8, "value": 80 },
+    { "type": "hinge", "x": 6 },
+    { "type": "distload", "x": [0, 11], "value": [60, 60] },
+    { "type": "simple", "x": 11 }
+  ]
+
+  const elems1 = parse(units1)
+  const elems2 = parse(units2)
+
+  it('should be have right length', () => {
+    expect(elems1.length).toBe(2)
+    expect(elems2.length).toBe(3)
+  })
+
+  it('should be have equal nodes', () => {
+    expect(elems1[0].nodes[1]).toEqual(elems1[1].nodes[0])
+    expect(elems2[0].nodes[1]).toEqual(elems2[1].nodes[0])
+    expect(elems2[1].nodes[1]).toEqual(elems2[2].nodes[0])
+  })
+
+  it('should be have right x', () => {
+    expect(elems1[0].nodes[0].x).toBe(0)
+    expect(elems1[1].nodes[0].x).toBe(4)
+    expect(elems1[1].nodes[1].x).toBe(8)
+
+    expect(elems2[0].nodes[0].x).toBe(0)
+    expect(elems2[1].nodes[0].x).toBe(6)
+    expect(elems2[1].nodes[1].x).toBe(8)
+    expect(elems2[2].nodes[1].x).toBe(11)
+  })
+
+  it('should be have right forces and moments', () => {
+    expect(elems1[0].nodes[1].force).toBe(100)
+
+    expect(elems2[1].nodes[1].moment).toBe(80)
+  })
+
+  it('should be have right supports', () => {
+    expect(elems1[0].nodes[0].support).toBe('simple')
+    expect(elems1[1].nodes[1].support).toBe('simple')
+
+    expect(elems2[1].nodes[0].support).toBe('hinge')
+    expect(elems2[0].nodes[0].support).toBe('simple')
+    expect(elems2[2].nodes[1].support).toBe('simple')
+  })
+
+  it('should be have right materials', () => {
+    expect(elems2[0].material).toEqual([33, 33, 33])
+    expect(elems2[1].material).toEqual([33, 33, 33])
+    expect(elems2[2].material).toEqual([33, 33, 33])
+  })
+
+  it('should be have right distload', () => {
+    expect(elems2[0].distload).toEqual([[60, 60]])
+    expect(elems2[1].distload).toEqual([[60, 60]])
+    expect(elems2[2].distload).toEqual([[60, 60]])
+  })
 })
