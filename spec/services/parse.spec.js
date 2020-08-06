@@ -25,11 +25,11 @@ describe('decription function and Elem class setters', () => {
   })
 
   it('should add distload to elem', () => {
-    decryption({ type: 'distload', value: -50 }, elems[0])
-    decryption({ type: 'distload', value: [50, -30] }, elems[0])
+    decryption({ x: [0, 1], type: 'distload', value: -50 }, elems[0])
+    decryption({ x: [0, 1], type: 'distload', value: [50, -30] }, elems[0])
 
-    expect(elems[0].distload[0]).toEqual([-50, -50])
-    expect(elems[0].distload[1]).toEqual([50, -30])
+    expect(elems[0].distload[0]).toEqual({ x: [0, 1], value: -50 })
+    expect(elems[0].distload[1]).toEqual({ x: [0, 1], value: [50, -30] })
   })
 
   it('should add material to elem', () => {
@@ -102,8 +102,8 @@ describe('parse function create elems from units', () => {
   })
 
   it('should be have right distload', () => {
-    expect(elems2[0].distload).toEqual([[60, 60]])
-    expect(elems2[1].distload).toEqual([[60, 60]])
-    expect(elems2[2].distload).toEqual([[60, 60]])
+    expect(elems2[0].distload).toEqual([{ x: [0, 11], value: [60, 60] }])
+    expect(elems2[1].distload).toEqual([{ x: [0, 11], value: [60, 60] }])
+    expect(elems2[2].distload).toEqual([{ x: [0, 11], value: [60, 60] }])
   })
 })
