@@ -1,6 +1,5 @@
 import { Unit } from './../core/global.core';
 import { INode } from './../core/calculate.core';
-
 import { Elem } from "./element";
 
 
@@ -13,7 +12,7 @@ export function decryption(unit: Unit, elem: Elem) {
       elem.addMoment(unit.value as number)
       break
     case "distload":
-      elem.addDistload(unit.value as number | [number, number])
+      elem.addDistload(unit.x as [number, number], unit.value as number | [number, number])
       break
     case "material":
       elem.addMaterial(unit.value as [number, number, number])
@@ -24,13 +23,14 @@ export function decryption(unit: Unit, elem: Elem) {
   }
 }
 
+/** Parse units to finite elements */
 export function parse(units: Array<Unit>): Array<Elem> {
-  
+
   const setOfCoords: Set<number> = new Set(units.map(unit => unit.x).flat())
   const sortedCoords: Array<number> = Array.from(setOfCoords).sort((a, b) => a - b)
 
   const nodes: Array<INode> = sortedCoords.map(coord => ({ x: coord, force: 0, moment: 0 }))
-  const elems: Array<Elem> = nodes.map((node, i) => new Elem([node, nodes[i + 1]])) //.slice(0, -1) обработка последней точки нужна ведь!
+  const elems: Array<Elem> = nodes.map((node, i) => new Elem([node, nodes[i + 1]]))
 
   for (const unit of units) {
     const x: Array<number> = (typeof unit.x === 'number') ? [unit.x, unit.x] : unit.x
