@@ -3,7 +3,6 @@ const decryption = require("../../dist/src/services/parse").decryption
 
 const Elem = require("../../dist/src/services/element").Elem
 
-
 describe('decription function and Elem class setters', () => {
   const node1 = { x: 0, force: 0, moment: 0 }
   const node2 = { x: 1, force: 0, moment: 0 }

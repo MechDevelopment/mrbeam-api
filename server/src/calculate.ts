@@ -7,7 +7,7 @@
  *  4. chart results creation / создание результатов и графиков
  */
 
- /** Computational functions
+/** Computational functions
  *
  * Abbreviation and terms:
  *  elems    - array of finite elements       / массив конечных элементов
@@ -24,25 +24,24 @@
  *  filled   - creating a filled array        / создание заполненного массива
  */
 
-import { Unit } from './core/global.core';
-import { Graph } from './core/calculate.core'
+import { Unit } from "./core/global.core";
+import { CalculateOptions, Graph } from "./core/calculate.core";
 
-import graph from './services/graph'
-import {parse} from './services/parse';
-import {Elem} from './services/element';
-import { handleErrors } from './services/error';
+import graph from "./services/graph";
+import { parse } from "./services/parse";
+import { fragmentation } from "./services/fragmentation";
+import { Elem } from "./services/element";
+import { handleErrors } from "./services/error";
 
+export default function calculate(
+  units: Array<Unit>,
+  options: CalculateOptions = { count: 100 }
+): Graph {
+  handleErrors(units);
 
-export default function calculate(units: Array<Unit>): Graph {
-
-  handleErrors(units)
-  
-  const elems: Array<Elem> = parse(units);
-
-  // А что если объединить парс юнитов и фрагментацию?
+  const elems: Array<Elem> = fragmentation(parse(units), options);
 
   // elems: Array<Elem> =>
-
 
   //// ansamblirovanie elements
   // const support = supporting(elems);
@@ -54,9 +53,6 @@ export default function calculate(units: Array<Unit>): Graph {
 
   // return chartResults(elems);
 
-  
-
-  
   return graph();
 }
 

@@ -36,8 +36,12 @@ export function parse(units: Array<Unit>): Array<Elem> {
     const x: Array<number> = (typeof unit.x === 'number') ? [unit.x, unit.x] : unit.x
 
     elems
-      .filter(elem => elem.nodes[0].x >= x[0] && elem.nodes[0].x <= x[1])
-      .forEach(elem => decryption(unit, elem))
+      .filter((elem) => {
+        return !["distload", "material"].includes(unit.type)
+          ? elem.nodes[0].x >= x[0] && elem.nodes[0].x <= x[1]
+          : elem.nodes[0].x >= x[0] && elem.nodes[0].x < x[1];
+      })
+      .forEach((elem) => decryption(unit, elem));
   }
 
   return elems.slice(0, -1)

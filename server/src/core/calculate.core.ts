@@ -1,5 +1,15 @@
+export interface CalculateOptions {
+  count?: number
+}
+
+export interface ElemLength {
+  length: number
+  start: number
+  end: number
+}
+
 export interface Graph {
-  [key: string]: Array<number> | number;
+  [key: string]: Array<number> | number
 }
 
 export interface INode {
