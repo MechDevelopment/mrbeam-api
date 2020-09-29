@@ -54,5 +54,5 @@ export function parse(units: Array<Unit>): Array<Elem> {
       .forEach((elem) => decryption(unit, elem))
   }
 
-  return elems.slice(0, -1)
+  return elems.slice(0, -1).sort((a, b) => a.nodes[0].x - b.nodes[0].x)
 }

@@ -39,7 +39,7 @@ describe('handleError function', () => {
     { x: 2, type: 'simple' },
   ]
 
-  it(`shoud be error <${exeption1}> if data bad format`, () => {
+  it(`should be error <${exeption1}> if data bad format`, () => {
     expect(() => handleErrors()).toThrowError(exeption1)
     expect(() => handleErrors(3)).toThrowError(exeption1)
     expect(() => handleErrors('xs')).toThrowError(exeption1)
@@ -47,27 +47,27 @@ describe('handleError function', () => {
     expect(() => handleErrors(new Date())).toThrowError(exeption1)
   })
 
-  it(`shoud be error <${exeption2}> if units bad format`, () => {
+  it(`should be error <${exeption2}> if units bad format`, () => {
     expect(() => handleErrors(['dsad'])).toThrowError(exeption2)
     expect(() => handleErrors([1, 2, 3])).toThrowError(exeption2)
     expect(() => handleErrors([[], [1, 2, 3]])).toThrowError(exeption2)
   })
 
-  it(`shoud be error <${exeption3}> if units havent <x> property`, () => {
+  it(`should be error <${exeption3}> if units havent <x> property`, () => {
     expect(() => handleErrors([{ type: 'simple' }])).toThrowError(exeption3)
     expect(() =>
       handleErrors([{ x: 0, type: 'simple' }, { type: 'disload' }])
     ).toThrowError(exeption3)
   })
 
-  it(`shoud be error <${exeption4}> if units havent <type> property`, () => {
+  it(`should be error <${exeption4}> if units havent <type> property`, () => {
     expect(() => handleErrors([{ x: 12 }])).toThrowError(exeption4)
     expect(() =>
       handleErrors([{ x: 0, type: 'simple' }, { x: 12 }])
     ).toThrowError(exeption4)
   })
 
-  it(`shoud be error <${exeption5}> if units have bad <x> property`, () => {
+  it(`should be error <${exeption5}> if units have bad <x> property`, () => {
     expect(() => handleErrors([{ x: 12, type: 'simple' }])).not.toThrowError(
       exeption5
     )
@@ -89,7 +89,7 @@ describe('handleError function', () => {
     )
   })
 
-  it(`shoud be error <${exeption6}> if units have bad <type> property`, () => {
+  it(`should be error <${exeption6}> if units have bad <type> property`, () => {
     expect(() => handleErrors([{ x: 0, type: 'simple' }])).not.toThrowError(
       exeption6
     )
@@ -105,7 +105,7 @@ describe('handleError function', () => {
     )
   })
 
-  it(`shoud be error <${exeption7}> if units havent <value> property`, () => {
+  it(`should be error <${exeption7}> if units havent <value> property`, () => {
     expect(() =>
       handleErrors([{ x: 0, type: 'force', value: -32 }])
     ).not.toThrowError(exeption7)
@@ -121,7 +121,7 @@ describe('handleError function', () => {
     )
   })
 
-  it(`shoud be error <${exeption8}> if units have bad <value> property`, () => {
+  it(`should be error <${exeption8}> if units have bad <value> property`, () => {
     expect(() => handleErrors([{ x: 0, type: 'simple' }])).not.toThrowError(
       exeption8
     )
@@ -143,7 +143,7 @@ describe('handleError function', () => {
     ).toThrowError(exeption8)
   })
 
-  it(`shoud be error <${exeption9}> if units count is 0 or 1`, () => {
+  it(`should be error <${exeption9}> if units count is 0 or 1`, () => {
     expect(() => handleErrors(someGoodUnits1)).not.toThrowError(exeption9)
 
     expect(() => handleErrors([])).toThrowError(exeption9)
@@ -152,7 +152,7 @@ describe('handleError function', () => {
     )
   })
 
-  it(`shoud be error <${exeption10}> if units count is 0 or 1`, () => {
+  it(`should be error <${exeption10}> if units count is 0 or 1`, () => {
     expect(() => handleErrors(someGoodUnits1)).not.toThrowError(exeption10)
     expect(() => handleErrors(someGoodUnits2)).not.toThrowError(exeption10)
 
