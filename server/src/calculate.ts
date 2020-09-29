@@ -24,22 +24,27 @@
  *  filled   - creating a filled array        / создание заполненного массива
  */
 
-import { Unit } from "./core/global.core";
-import { CalculateOptions, Graph } from "./core/calculate.core";
+import { Unit } from './core/global.core'
+import { CalculateOptions, Graph } from './core/calculate.core'
 
-import graph from "./services/graph";
-import { parse } from "./services/parse";
-import { fragmentation } from "./services/fragmentation";
-import { Elem } from "./services/element";
-import { handleErrors } from "./services/error";
+import graph from './services/graph'
+import { parse } from './services/parse'
+import { fragmentation } from './services/fragmentation'
+import { Elem } from './services/element'
+import { handleErrors } from './services/error'
 
 export default function calculate(
   units: Array<Unit>,
   options: CalculateOptions = { count: 100 }
 ): Graph {
-  handleErrors(units);
+  handleErrors(units)
 
-  const elems: Array<Elem> = fragmentation(parse(units), options);
+  const parseUnits: Array<Elem> = parse(units).sort(
+    (a, b) => a.nodes[0].x - b.nodes[0].x
+  )
+  const elems: Array<Elem> = fragmentation(parseUnits, options)
+
+  console.log(elems.map((el) => el.nodes[0].x))
 
   // elems: Array<Elem> =>
 
@@ -53,7 +58,7 @@ export default function calculate(
 
   // return chartResults(elems);
 
-  return graph();
+  return graph()
 }
 
 // function supporting(elems) {

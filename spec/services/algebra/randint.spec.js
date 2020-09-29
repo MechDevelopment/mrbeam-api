@@ -1,7 +1,6 @@
-const randInt = require("../../../dist/src/services/algebra.js").randInt
+const randInt = require('../../../dist/src/services/algebra.js').randInt
 
 describe('randInt', () => {
-  
   it('shoud be return 0 if interval 0-0', () => {
     expect(randInt(0, 0)).toBe(0)
   })
