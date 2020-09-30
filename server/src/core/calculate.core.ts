@@ -8,6 +8,12 @@ export interface ElemLength {
   end: number
 }
 
+export interface Skeleton {
+  indexMatrix: number[][]
+  sups: number[]
+  counter: number
+}
+
 export interface Graph {
   [key: string]: Array<number> | number
 }

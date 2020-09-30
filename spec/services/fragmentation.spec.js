@@ -54,8 +54,8 @@ describe('function fragmentation', () => {
 
   it('should be have good sequence of numbers', () => {
     const sortedElems = elems
-      .sort((a, b) => a.nodes[0].x - b.nodes[0].x)
       .map((el) => el.getClone())
+      .sort((a, b) => a.nodes[0].x - b.nodes[0].x) // где-то происходит перемешивание.
 
     const elements = fragmentation(sortedElems, { count: 30 })
 
