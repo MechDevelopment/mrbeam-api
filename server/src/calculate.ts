@@ -16,9 +16,17 @@ export function buildSkeleton(elems: Array<Elem>): Skeleton {
   for (let i = 0; i < elems.length; i++) {
     for (let j = 0; j < 4; j++) {
       // definition vector building
-      if (j == 0 && elems[i].nodes[0].support === 'simple') sups.add(counter)
+      if (
+        j == 0 &&
+        ['fixed', 'simple'].includes(elems[i].nodes[0].support || '')
+      )
+        sups.add(counter)
       if (j == 1 && elems[i].nodes[0].support === 'fixed') sups.add(counter)
-      if (j == 2 && elems[i].nodes[1].support === 'simple') sups.add(counter)
+      if (
+        j == 2 &&
+        ['fixed', 'simple'].includes(elems[i].nodes[1].support || '')
+      )
+        sups.add(counter)
       if (j == 3 && elems[i].nodes[1].support === 'fixed') sups.add(counter)
 
       // index matrix building
@@ -36,7 +44,7 @@ export function buildSkeleton(elems: Array<Elem>): Skeleton {
   }
 }
 
-function buildGlobalM(
+export function buildGlobalM(
   elems: Array<Elem>,
   { indexMatrix, sups, counter }: Skeleton
 ): number[][] {
@@ -65,7 +73,7 @@ function buildGlobalM(
   return matrix
 }
 
-function buildGlobalV(
+export function buildGlobalV(
   elems: Array<Elem>,
   { indexMatrix, sups, counter }: Skeleton
 ): number[] {
@@ -101,7 +109,7 @@ export default function calculate(
   const skeleton: Skeleton = buildSkeleton(elems)
   const GM = buildGlobalM(elems, skeleton)
   const GV = buildGlobalV(elems, skeleton)
-  console.log(GM, GV)
+  // console.log(GM, GV)
   // const solution = solve(GM, GV);
   // reaction(elems, solution, support);
 
