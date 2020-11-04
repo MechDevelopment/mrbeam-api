@@ -6,6 +6,7 @@ import { parse } from './services/parse'
 import { fragmentation } from './services/fragmentation'
 import { Elem } from './services/element'
 import { handleErrors } from './services/error'
+import { multiply, solve } from './services/algebra'
 
 export function buildSkeleton(elems: Array<Elem>): Skeleton {
   let counter = 0 // Общее кол-во элементов в матрице индексов
@@ -109,9 +110,21 @@ export default function calculate(
   const skeleton: Skeleton = buildSkeleton(elems)
   const GM = buildGlobalM(elems, skeleton)
   const GV = buildGlobalV(elems, skeleton)
-  // console.log(GM, GV)
-  // const solution = solve(GM, GV);
-  // reaction(elems, solution, support);
+  const solution = solve(GM, GV)
 
-  return graph()
+  const localSolutions = []
+  const localReactions = []
+
+  for (let i = 0; i < elems.length; i++) {
+    const localSolution = skeleton.indexMatrix[i].map((el) => solution[el])
+    localSolutions.push(localSolution)
+
+    localReactions.push(
+      multiply(elems[i].localMatrix, localSolution).map(
+        (element, index) => element - elems[i].distVector[index]
+      )
+    )
+  }
+
+  return graph({ elems, localSolutions, localReactions })
 }

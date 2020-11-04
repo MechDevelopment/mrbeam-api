@@ -22,7 +22,7 @@ const GV = buildGlobalV(elems, skeleton)
 
 describe('calculate function', () => {
   it('should be do anything', () => {
-    calculate(generate())
+    console.log(calculate(units))
     const solution = [0, 0, -420, -99.243, 102.776, 0, 26.198, 0, -10.433]
   })
 })

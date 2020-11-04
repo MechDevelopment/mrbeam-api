@@ -1,3 +1,5 @@
+import { Elem } from "../services/element";
+
 export interface CalculateOptions {
   count?: number
 }
@@ -16,6 +18,12 @@ export interface Skeleton {
 
 export interface Graph {
   [key: string]: Array<number> | number
+}
+
+export interface GraphArgs {
+  elems: Elem[]
+  localSolutions: number[][]
+  localReactions: number[][]
 }
 
 export interface INode {
