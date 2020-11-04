@@ -4,21 +4,24 @@ export function randInt(a: number, b: number): number {
 }
 
 export function shuffleArray<T>(array: Array<T>): Array<T> {
-  // алгоритм Фишера
-  var m = array.length,
-    t,
-    i
+  let m = array.length
+  let t, i
 
-  // While there remain elements to shuffle…
   while (m) {
-    // Pick a remaining element…
     i = Math.floor(Math.random() * m--)
-
-    // And swap it with the current element.
     t = array[m]
     array[m] = array[i]
     array[i] = t
   }
 
   return array
+}
+
+export function flat(array: Array<number | number[]>): Array<number> {
+  const result: Array<number> = []
+  for (let i = 0; i < array.length; i++) {
+    if (Array.isArray(array[i])) result.push(...(array[i] as number[]))
+    else result.push((array[i] as number))
+  }
+  return result
 }

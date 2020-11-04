@@ -1,6 +1,7 @@
 import { Unit } from './../core/global.core'
 import { INode } from './../core/calculate.core'
 import { Elem } from './element'
+import { flat } from './algebra'
 
 export function decryption(unit: Unit, elem: Elem) {
   switch (unit.type) {
@@ -27,7 +28,7 @@ export function decryption(unit: Unit, elem: Elem) {
 
 /** Parse units to finite elements */
 export function parse(units: Array<Unit>): Array<Elem> {
-  const setOfCoords: Set<number> = new Set(units.map((unit) => unit.x).flat())
+  const setOfCoords: Set<number> = new Set(flat(units.map((unit) => unit.x)))
   const sortedCoords: Array<number> = Array.from(setOfCoords).sort(
     (a, b) => a - b
   )
