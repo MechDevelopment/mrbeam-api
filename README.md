@@ -22,7 +22,6 @@ fetch(URL, {
   .then(data => console.table(data));
 ```
 Body is an object with optional parameters:
->'complexity' - the complexity of the beam, 'unitsCount' - number of elements, including material, 'beamLength'.
 
 | 'complexity'   | 'unitsCount' | features               |
 |----------------|--------------|------------------------|
@@ -31,7 +30,38 @@ Body is an object with optional parameters:
 | 'intermediate' | 4 - 8        | 'distload', 'material' |
 | 'advanced'     | 6 - 10       | 'hinge'                |
 
-'complexity' and 'unitsCount' can conflict with each other, but 'unitsCount' is more important.
+'unitsCount' is more important than 'complexity'.
+
+## Units
+```typescript
+interface Unit {
+  readonly id: string
+  type: UnitType
+  x: number | number[]
+  value?: number | number[]
+}
+```
+
+```typescript
+type UnitType =
+  | 'point'
+  | 'force'
+  | 'moment'
+  | 'distload'
+  | 'fixed'
+  | 'simple'
+  | 'hinge'
+  | 'material'
+```
+Examples:
+
+| type                       | x            | value              |
+|----------------------------|--------------|--------------------|
+| 'point'                    | 5            | undefined          |
+| 'force', 'moment'          | 10           | -10                |
+| 'distload'                 | [0, 10]      | -10 || [-10, 10]   |
+| 'fixed', 'simple', 'hinge' | 2            | undefined          |
+| 'material'                 | [0, 10]      | [12345, 0.2, 0.1]  |
 
 ## Contributing
 If errors are found, please open an issue to discuss.
