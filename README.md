@@ -1,6 +1,13 @@
-# MrBeamAPI
+# MrBeam API
 
 REST API for mrbeam project. We want to create an online service for calculating beams using the finite element method, accessible to everyone.
+
+## Docker Installation
+```
+make build
+make run
+```
+Listen on [localhost:3000](http://localhost:3000/)
 
 ## Usage
 ```javascript
